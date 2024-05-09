@@ -24,7 +24,7 @@ Route::post("logout", [AuthController::class, "logout"])->middleware('auth:sanct
 Route::post("/contact", [MailController::class, "contact"]);
 
 Route::apiResource("quiz", QuizController::class)->except("index")->middleware('auth:sanctum');
-Route::post("answer", [AnswerController::class, "check"])->middleware('auth:sanctum');
+Route::get("answer/{option}", [AnswerController::class, "check"])->middleware('auth:sanctum');
 Route::get("quiz", [QuizController::class, "index"]);
 Route::apiResource("question", QuizController::class);
 Route::apiResource("option", QuizController::class);

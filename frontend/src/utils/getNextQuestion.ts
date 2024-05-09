@@ -1,5 +1,7 @@
-export default (() => 
-{
-    let current = 0
-    return (questions?: IQuestion[]) => questions?.[current + 1]
-})()
+export default (questions: IQuestion[]) => {
+    let current = - 1
+    return () => {
+        current += 1
+        return questions[current] || null
+    }
+}

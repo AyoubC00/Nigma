@@ -5,15 +5,16 @@ interface ICounter {
     sx?: SxProps
     start?: boolean
     onGameover?: () => void
+    onTimeout?: () => void
 }
 
-const Counter = ({ sx, start, onGameover }: ICounter) =>
+const Counter = ({ sx, start, onGameover, onTimeout }: ICounter) =>
 {
-    const [time, setTime] = useState({ seconds: 0, minutes: 1 })
+    const [time, setTime] = useState({ seconds: 2, minutes: 0 })
     useEffect(() => {
         if (!start) return
         const timer = setTimeout( () => {
-            if (time.seconds === 0 && time.minutes === 0) return onGameover?.()
+            if (time.seconds === 0 && time.minutes === 0) return onTimeout?.(setTime)
             update()
         }, 1000)
         return () => clearTimeout(timer)

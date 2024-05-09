@@ -63,11 +63,11 @@ export const QuizzesContextProvider: React.FC<{children: React.ReactNode}> = ({ 
         const quiz = getQuiz(quiz_id)
         return quiz?.questions || null
     }
-    const checkAnswer = async (question_id?: number | string, option_id?: number | string) =>
+    const checkAnswer = async (option_id?: number | string) =>
     {
         try
         {
-            const response = await API.post("answer", { question_id, option_id})
+            const response = await API.get(`answer/${option_id}`)
             return response.data
         }
         catch (error)

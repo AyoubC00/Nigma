@@ -1,6 +1,7 @@
-import { Help } from "@mui/icons-material"
+import { CheckRounded, Help } from "@mui/icons-material"
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { blue, green, orange, red } from "@mui/material/colors"
+import { useState } from "react"
 
 type Option = {
     id: number | string
@@ -15,15 +16,18 @@ interface IColor {
         secondary: string
     }
 }
+
+const COLORS: IColor = {
+    "blue": { primary: blue[700], secondary: blue[600] },
+    "red": { primary: red[700], secondary: red[600] },
+    "green": { primary: green[700], secondary: green[600] },
+    "orange": { primary: orange[700], secondary: orange[600] },
+}
+
 const Option = ({ id, value, handleAnswer, bgcolor="blue", is_correct=null }: Option) =>
 {
-
-    const COLORS: IColor = {
-        "blue": { primary: blue[700], secondary: blue[600] },
-        "red": { primary: red[700], secondary: red[600] },
-        "green": { primary: green[700], secondary: green[600] },
-        "orange": { primary: orange[700], secondary: orange[600] },
-    }
+    const [selected, setSelected] = useState(false)
+    
     const containerStyle = {
         bgcolor: COLORS[bgcolor].primary, 
         boxShadow: 1, 
@@ -32,9 +36,18 @@ const Option = ({ id, value, handleAnswer, bgcolor="blue", is_correct=null }: Op
         "&:hover": { bgcolor: COLORS[bgcolor].secondary }
     }
     const disabled = !(is_correct ?? true)
+
+    const handleClick = () =>
+    {
+        setSelected(true)
+        handleAnswer?.(id)
+    }
+
     return (
-        <ListItemButton sx={ containerStyle } disabled={ disabled } onClick={ () => handleAnswer?.(id) }>
-            <ListItemIcon sx={{ color: "white", minWidth: 35 }}><Help /></ListItemIcon>
+        <ListItemButton sx={ containerStyle } disabled={ disabled } onClick={ handleClick }>
+            <ListItemIcon sx={{ color: "white", minWidth: 35 }}>
+                { selected === true ? <CheckRounded /> : <Help /> }
+            </ListItemIcon>
             <ListItemText primary={ value }/>
         </ListItemButton>            
     )

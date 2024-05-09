@@ -13,7 +13,7 @@ interface IQuestion {
 interface IQuiz {
     id?: string | number
     title?: string
-    questions?: IQuestion[]
+    questions: IQuestion[]
 }
 
 interface ICredentials {
@@ -92,7 +92,7 @@ type Quiz = {
 type State = "show" | "edit" | "create" 
 type Answer = {
     status: "success"
-    feedback: true
+    is_correct: boolean
 }
 interface IQuizzesContext {
     quizzes: IQuiz[]
