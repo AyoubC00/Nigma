@@ -1,11 +1,11 @@
 import { Edit } from "@mui/icons-material"
 import { Avatar, Box, Button, Card, CardContent, CardMedia, Chip, SxProps, Typography } from "@mui/material"
-import { NavLink, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useQuizzes } from "../../contexts/QuizzesContext"
 
-const QuizCard = ({ id, title, image, category="sth" }: QuizCard) =>
+const QuizCard = ({ id, title, image, taken, category="sth" }: QuizCard) =>
 {
-    const { setState } = useQuizzes()
+    const { setState, saveAttempt, resetScore } = useQuizzes()
     const navigate = useNavigate()
     const cardStyle: SxProps = [
         {
@@ -41,6 +41,19 @@ const QuizCard = ({ id, title, image, category="sth" }: QuizCard) =>
     {
         setState("edit")
         navigate(`/dashboard/quizzes/${ id }/edit`)
+    }
+    const handleClick = async () =>
+    {
+        if (taken) {
+            const response = await resetScore(id)
+            if (response?.status === "success") navigate(`/playground/quiz/${ id }`)
+        }
+        else
+        {
+            const response = await saveAttempt(id)
+            if (response?.status === "success") navigate(`/playground/quiz/${ id }`)
+        }
+        
     }
     return (
         <Card sx={ cardStyle }>
@@ -80,7 +93,9 @@ const QuizCard = ({ id, title, image, category="sth" }: QuizCard) =>
                     justifyContent: "space-around",
                 }}>
                     <Typography>{ title }</Typography>
-                    <Button fullWidth variant="outlined" color="inherit" component={ NavLink } to={ `/playground/quiz/${ id }` }>Take quiz</Button>
+                    <Button fullWidth variant="outlined" color="inherit" onClick={ handleClick } >
+                        { taken ? "Try againe" : "Take quiz" }
+                    </Button>
                 </Box>
             </CardContent>
         </Card>

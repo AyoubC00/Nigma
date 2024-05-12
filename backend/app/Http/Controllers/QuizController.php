@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreQuizRequest;
 use App\Http\Resources\QuizCollection;
 use App\Http\Resources\QuizResource;
+use App\Models\Attempt;
 use App\Models\Quiz;
-use App\Models\User;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +21,59 @@ class QuizController extends Controller
      */
     public function index()
     {
-        return new QuizCollection(Quiz::all());
+        try
+        {
+            return [
+                "status" => "success",
+                "data" => QuizCollection::make(Quiz::all())
+            ];
+        }
+        catch (Exception $error)
+        {
+            return [
+                "status" => "failure",
+                "message" => $error->getMessage()
+            ];
+        }
     }
 
+    public function list()
+    {
+        $quizzes = Quiz::with('attempt')->get();
+        try
+        {
+            return [
+                "status" => "success",
+                "data" => QuizCollection::make($quizzes)
+            ];
+        }
+        catch (Exception $error)
+        {
+            return [
+                "status" => "failure",
+                "message" => $error->getMessage()
+            ];
+        }
+    }
+
+    public function proprietary ()
+    {
+        try
+        {
+            $quizzes = Quiz::createdBy(Auth::user()->id)->get();
+            return [
+                "status" => "success",
+                "data" => QuizCollection::make($quizzes)
+            ];
+        }
+        catch (Exception $error)
+        {
+            return [
+                "status" => "failure",
+                "message" => $error->getMessage()
+            ];
+        }
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -34,13 +86,16 @@ class QuizController extends Controller
         $image_url = Storage::disk("public")->putFile("images", $image, "public");
         $image_url = Storage::disk("public")->url($image_url);
         DB::beginTransaction();
-            $quiz = $user->quizzes()->create(["title" => $title, "image" => $image_url]);
+            $quiz = $user->quizzes()->create(["title" => $title, "image" => $image_url, "mode" => "Solo"]);
             forEach($questions as $question) {
                 $question_instance = $quiz->questions()->create(["text" => $question["text"]]);
                 $options = $question_instance->options()->createMany($question["options"]);
             }
         DB::commit();
-        // return response(["quiz" => $questions]);
+        return response([
+            "status" => "success",
+            "message" => "The quiz was created successfully."
+        ]);
     }
 
     /**

@@ -1,4 +1,4 @@
-import { CheckRounded, Help } from "@mui/icons-material"
+import { CheckRounded, Close, Help } from "@mui/icons-material"
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { blue, green, orange, red } from "@mui/material/colors"
 import { useState } from "react"
@@ -46,7 +46,7 @@ const Option = ({ id, value, handleAnswer, bgcolor="blue", is_correct=null }: Op
     return (
         <ListItemButton sx={ containerStyle } disabled={ disabled } onClick={ handleClick }>
             <ListItemIcon sx={{ color: "white", minWidth: 35 }}>
-                { selected === true ? <CheckRounded /> : <Help /> }
+                { is_correct === null ? <Help /> : is_correct ? <CheckRounded /> : <Close /> }
             </ListItemIcon>
             <ListItemText primary={ value }/>
         </ListItemButton>            

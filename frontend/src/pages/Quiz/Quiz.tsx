@@ -2,7 +2,6 @@ import { ExitToApp } from "@mui/icons-material"
 import { Box, Button, Container, Typography } from "@mui/material"
 import bg from "../../assets/burst.svg"
 import { useNavigate, useParams } from "react-router-dom"
-import Counter from "../../components/Counter/Counter"
 import Idle from "../../screens/Idle"
 import Play from "../../screens/Play"
 import { useEffect, useState } from "react"
@@ -73,11 +72,10 @@ const Quiz = () =>
     return (
         <Container sx={ containerStyle }>
             <Box sx={ frameStyle }>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 4 }}>
                     <Typography color="inherit" variant="h6">
                         Nigma
                     </Typography>
-                    <Counter sx={{ mx: "auto" }} />
                     <Button variant="contained" color="error" startIcon={<ExitToApp />} onClick={ () => navigate(-1) }>
                         Exit
                     </Button>
@@ -85,7 +83,7 @@ const Quiz = () =>
                 <Box sx={ contentStyle }>
                     {
                         start
-                        ? gameOver ? <GameOver onReplay={ handleReplay } /> : <Play questions={ quiz?.questions } onGameOver={ handleGameOver }/>
+                        ? gameOver ? <GameOver onReplay={ handleReplay } quiz_id={ quiz?.id } /> : <Play questions={ quiz?.questions } onGameOver={ handleGameOver }/>
                         : <Idle is_loading={ isLoading } handleStart={ handleStart } title={ quiz?.title } />
                     }
                 </Box>

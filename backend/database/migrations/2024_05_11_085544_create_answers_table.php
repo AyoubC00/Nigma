@@ -1,6 +1,8 @@
 <?php
 
-use App\Models\User;
+use App\Models\Attempt;
+use App\Models\Option;
+use App\Models\Question;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +14,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quizzes', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("mode");
-            $table->string("image");
-            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(Attempt::class)->constrained();
+            $table->foreignIdFor(Question::class)->constrained();
+            $table->foreignIdFor(Option::class)->constrained();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quizzes');
+        Schema::dropIfExists('answers');
     }
 };

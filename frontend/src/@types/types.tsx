@@ -1,3 +1,13 @@
+interface IUser {
+    id: number | string
+    name: string
+}
+
+type Time = { 
+    seconds: number
+    minutes: number 
+}
+
 interface IOption {
     id: number | string
     text: string
@@ -10,11 +20,6 @@ interface IQuestion {
     options: IOption[]
 }
 
-interface IQuiz {
-    id?: string | number
-    title?: string
-    questions: IQuestion[]
-}
 
 interface ICredentials {
     username: string
@@ -50,10 +55,26 @@ interface IUserData {
     password: string
     password_confirmation: string
 }
-
-interface QuizCard {
-    id: number
+type Quiz = {
+    id?: string | number
+    title?: string
+    taken?: boolean
+    image?: string
+    category?: string
+    questions?: IQuestion[]
+}
+interface IQuiz {
+    id: string | number
     title: string
+    taken: boolean
+    image: string
+    category: string
+    questions: IQuestion[]
+}
+interface QuizCard {
+    id: number | string
+    title: string
+    taken?: boolean
     image: string
     category: string
 }
@@ -81,22 +102,30 @@ type Question = {
 
 type MenuAction = () => void 
 
-type Quiz = {
-    id: number
-    title: string
-    category: string
-    image: string
-    questions: IQuestion[]
-}
 
 type State = "show" | "edit" | "create" 
 type Answer = {
-    status: "success"
-    is_correct: boolean
+    [id: string|number]: boolean
 }
+
+interface IAttempt {
+    id: number | string
+    quiz_id: number | string
+    title: string
+    score: number
+    since: string
+    mode: "Solo" | "Multiplayer"
+}
+
+type Attempt = 
+    | { status: "success" | "failure", message: string }
+    | { status: "success" | "failure", data: string }
+
 interface IQuizzesContext {
     quizzes: IQuiz[]
-    quiz: IQuiz | null,
+    userQuizzes: IQuiz[] | null
+    attempts: IAttempt[] | null
+    quiz: IQuiz | null
     state: State
     getQuestions: (quiz_id: number | string) => IQuestion[] | null
     getQuiz: (quiz_id: number | string) => IQuiz | null
@@ -104,7 +133,9 @@ interface IQuizzesContext {
     setQuiz: (quiz:IQuiz) => void | null
     save: (quiz: FormData) => Promise<ApiResponse<IQuiz>> | null
     get: (quiz_id: string | number) => Promise<ApiResponse<IQuiz>> | null
+    saveAttempt: (quiz_id: number | string) => Promise<ApiResponse<Attempt>> | null
     checkAnswer: (question_id?: number | string, option_id?: number | string) => Promise<ApiResponse<Answer>> | null
+    resetScore: (quiz_id?: number | string) => Promise<ApiResponse<Attempt>> | null
 }
 
 // type UpdateState<T> = (prev: T[]) => T[] | Partial<T>

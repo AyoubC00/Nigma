@@ -7,32 +7,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Quiz extends Model
+class Attempt extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        "title",
         "user_id",
-        "image",
-        "mode"
+        "quiz_id",
+        "is_complete",
+        "score"
     ];
-
-    public function scopeCreatedBy(Builder $query, $user_id) : void {
-        $query->where("user_id", $user_id);
+    public function quiz () : BelongsTo {
+        return $this->belongsTo(Quiz::class);
     }
 
-    public function questions () : HasMany {
-        return $this->hasMany(Question::class);
+    public function scopeTokenBy(Builder $query, $user_id): void {
+        $query->where("user_id", $user_id);
     }
 
     public function user () : BelongsTo {
         return $this->belongsTo(User::class);
     }
-
-    public function attempt () : HasOne {
-        return $this->hasOne(Attempt::class);
+    public function answers () : HasMany {
+        return $this->hasMany(Answer::class);
     }
 }

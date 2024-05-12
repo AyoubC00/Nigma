@@ -13,6 +13,7 @@ import ProtectedRouter from "./components/ProtectedRoute/ProtectedRouter";
 import PublicRoute from "./components/PublicRoute/PublicRoute";
 import CreateQuiz from "./pages/CreateQuiz/CreateQuiz";
 import PlayGround from "./pages/PlayGround/PlayGround";
+import EditQuiz from "./pages/EditQuiz/EditQuiz";
 
 const router = createBrowserRouter([
     {
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
                     {
                         path: "quizzes/create",
                         element: <CreateQuiz />
+                    },
+                    {
+                        path: "quizzes/:id/edit",
+                        element: <EditQuiz />
                     }
                 ]
             }

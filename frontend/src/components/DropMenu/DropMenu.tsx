@@ -11,9 +11,10 @@ type MenuItem = {
 
 interface IDropMenu {
     menuList: MenuItem[]
+    icon?: React.ReactNode
 }
 
-const DropMenu = ( { menuList }: IDropMenu ) =>
+const DropMenu = ( { menuList, icon }: IDropMenu ) =>
 {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null)
     const handleOpen = (event: React.MouseEvent<HTMLElement>) =>
@@ -32,8 +33,8 @@ const DropMenu = ( { menuList }: IDropMenu ) =>
     }
     return (
         <>
-            <IconButton onClick={ handleOpen } sx={{ color: "inherit" }}>
-                <SettingsRounded />
+            <IconButton edge="end" onClick={ handleOpen } sx={{ color: "inherit" }}>
+                { icon }
             </IconButton>
             <Menu anchorEl={ anchorEl } open={ Boolean(anchorEl) } onClose={ handleClose }>
                 {

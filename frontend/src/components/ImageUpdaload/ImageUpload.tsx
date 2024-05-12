@@ -34,7 +34,7 @@ const ImageUpload = ({ sx, setImage }: IImageUpload) =>
     }
     return (
         <Box sx={ sx }>
-            {/* { preview ? <img src={ preview } alt="Quiz image" style={ imageStyle } /> : null } */}
+            { preview ? <img src={ preview } alt="Quiz image" style={ imageStyle } /> : null }
             <Button fullWidth variant="contained" size="medium" startIcon={ <CloudUpload /> } component="label" sx={{ whiteSpace: "pre" }}>
                 Upload image
                 <input type="file" id="imageUpload" style={ inputStyle } onChange={ handleChange }/>

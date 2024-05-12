@@ -12,13 +12,14 @@ const Popular = () =>
                         Try out our most popular quizzes
                     </Typography>
                     <Grid container spacing={ 2 }>
-                        {
-                            quizzes.map(quiz =>
+                        {   
+                            quizzes?.map(quiz =>
                                 <Grid item xs={ 12 } sm={ 6 } md={ 4 } lg={ 3 } key={ quiz.id }>
                                     <QuizCard 
                                         id={ quiz.id } 
                                         title={ quiz.title } 
-                                        image={ quiz.image } 
+                                        image={ quiz.image }
+                                        taken={ quiz?.taken } 
                                         category={ quiz.category }
                                     />
                                 </Grid>

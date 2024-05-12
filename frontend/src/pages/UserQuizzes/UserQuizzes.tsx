@@ -6,17 +6,15 @@ import { useQuizzes } from "../../contexts/QuizzesContext"
 
 const UserQuizzes = () =>
 {
-    const { setState, quizzes } = useQuizzes()
+    const { userQuizzes } = useQuizzes()
     const navigate = useNavigate()
     const handleClick = async () =>
     {
-        // setState("create")
-        
         navigate("create")
     }
     return (
         <Container>
-            <Box sx={{ py: 4 }}>
+            <Box sx={{ px: { xs: 1, sm: 2 }, py: 4 }}>
                 <Button 
                     variant="contained" 
                     size="small" 
@@ -27,7 +25,7 @@ const UserQuizzes = () =>
                 </Button>
                 <Grid container spacing={ 3 }>
                     {
-                        quizzes.map((quiz, index) =>
+                        userQuizzes?.map((quiz, index) =>
                             <Grid xs={ 12 } sm={ 6 } lg={ 4 } item key={ index }>
                                 <QuizCard { ...quiz }/>
                             </Grid>

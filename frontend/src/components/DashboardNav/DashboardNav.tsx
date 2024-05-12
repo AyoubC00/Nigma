@@ -9,9 +9,7 @@ const DashboardNav = () =>
         textDecoration: "none",
     }
     const navStyle = {
-        mx: { sm: 3 },
-        mt: { sm: 4 },
-        borderRadius: { sm: 1 },
+        display: { xs: "block", md: "none" },
         bgcolor: blue[700],
         color: "white",
         boxSizing: "border-box",

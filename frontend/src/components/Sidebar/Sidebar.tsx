@@ -1,7 +1,8 @@
 import { DashboardOutlined, HomeOutlined, PersonOutline, QuizOutlined } from "@mui/icons-material"
-import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from "@mui/material"
 import { blue } from "@mui/material/colors"
 import { NavLink } from "react-router-dom"
+import UserAvatar from "../UserAvatar/UserAvatar"
 
 const Sidebar = () =>
 {
@@ -26,6 +27,13 @@ const Sidebar = () =>
             display: { xs: "none", md: "block" }
         }}>
             <List>
+                <ListSubheader sx={{ bgcolor: "transparent", color: "white", display: "flex", justifyContent: "space-between", alignItems: "center", pb: 1, px: { xs: 1, sm: 2 } }}>
+                    <Typography color="inherit" component={ NavLink } to="/" variant="h6" sx={{ textDecoration: "none" }}>
+                        Nigma
+                    </Typography>
+                    <UserAvatar />
+                </ListSubheader>
+                <Divider sx={{ mb: 1 }} />
                 {
                     sidebarLinks.map((item, index) =>
                         <ListItemButton key={ index } component={ NavLink } to={ item.link }>

@@ -17,17 +17,22 @@ interface IQuestion {
 interface ICreateQuiz  {
     onClick?: (event: React.MouseEvent) => void
     setQuestions?: (question: IQuestion) => void
+    question?: IQuestion
 }
 
-const CreateQuestion = ({ onClick, setQuestions, ...props }: ICreateQuiz & DrawerProps) =>
+const CreateQuestion = ({ question, onClick, setQuestions, ...props }: ICreateQuiz & DrawerProps) =>
 {
-    const [question, setQuestion] = useState<string>('')
-    const [options, setOptions] = useState<Options>({
-        "option_1": { text: "", is_correct: false },
-        "option_2": { text: "", is_correct: false },
-        "option_3": { text: "", is_correct: false },
-        "option_4": { text: "", is_correct: false }
-    })
+    const [_question, setQuestion] = useState<string>('')
+    const [options, setOptions] = useState<Options>(
+        question 
+        ? question.options.reduce((acc, curr, index) => ({ ...acc, [`option_${ index }`]: { ...curr } }) ,{})
+        : {
+            "option_1": { text: "", is_correct: false },
+            "option_2": { text: "", is_correct: false },
+            "option_3": { text: "", is_correct: false },
+            "option_4": { text: "", is_correct: false }
+        }
+    )
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
         const { name, value } = event.target
@@ -41,7 +46,7 @@ const CreateQuestion = ({ onClick, setQuestions, ...props }: ICreateQuiz & Drawe
     const handleSubmit = () =>
     {
         const opts = Object.values(options)
-        setQuestions?.({ text: question, options: opts })
+        setQuestions?.({ text: _question, options: opts })
     }
     return (
         <Drawer { ...props } anchor="right">
@@ -55,7 +60,7 @@ const CreateQuestion = ({ onClick, setQuestions, ...props }: ICreateQuiz & Drawe
             </ListItem>
             <Box sx={{ width: { sm: 500 }, py: 3, px: 4, height: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <Box>
-                    <TextField fullWidth size="small" label="Question" sx={{ mb: 2 }} name="question" value={ question } onChange={ handleChange }/>
+                    <TextField fullWidth size="small" label="Question" sx={{ mb: 2 }} name="question" value={ _question } onChange={ handleChange }/>
                     {
                         [1,2,3,4].map((opt, index) =>
                             <OptionField 
