@@ -1,13 +1,16 @@
 import { CloudUpload } from "@mui/icons-material"
-import { Box, Button, SxProps } from "@mui/material"
+import { Box, Button, FormHelperText, SxProps, Typography } from "@mui/material"
 import { ChangeEvent, CSSProperties, useState } from "react"
 
 interface IImageUpload {
     sx?: SxProps
+    placeholder?: string
+    helperText?: string
+    error?: boolean
     setImage: (image: File) => void
 }
 
-const ImageUpload = ({ sx, setImage }: IImageUpload) =>
+const ImageUpload = ({ sx, placeholder, error, helperText, setImage }: IImageUpload) =>
 {
     const [preview, setPreview] = useState<string>()
     const inputStyle = {
@@ -34,11 +37,12 @@ const ImageUpload = ({ sx, setImage }: IImageUpload) =>
     }
     return (
         <Box sx={ sx }>
-            { preview ? <img src={ preview } alt="Quiz image" style={ imageStyle } /> : null }
+            { preview || placeholder ? <img src={ preview || placeholder } alt="Quiz image" style={ imageStyle } /> : null }
             <Button fullWidth variant="contained" size="medium" startIcon={ <CloudUpload /> } component="label" sx={{ whiteSpace: "pre" }}>
                 Upload image
                 <input type="file" id="imageUpload" style={ inputStyle } onChange={ handleChange }/>
             </Button>
+            <FormHelperText error={ error }>{ helperText }</FormHelperText>
         </Box>
     )
 }

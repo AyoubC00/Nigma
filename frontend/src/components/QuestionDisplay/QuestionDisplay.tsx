@@ -1,17 +1,18 @@
-import { Box, Collapse, List, ListItem, ListItemButton, ListItemText, Paper } from "@mui/material"
+import { Collapse, List, ListItem, ListItemButton, ListItemText, Paper } from "@mui/material"
 import DropMenu from "../DropMenu/DropMenu"
 import { ExpandLess, ExpandMore, MoreVert } from "@mui/icons-material"
 import { useState } from "react"
 
 interface IQuestionDisplayProps {
-    onEdit?: () => void
+    onEdit?: (question: IQuestion) => void
+    question: IQuestion
 }
 
-const QuestionDisplay = ({ onEdit }: IQuestionDisplayProps) =>
+const QuestionDisplay = ({ question, onEdit }: IQuestionDisplayProps) =>
 {
     const [open, setOpen] = useState<boolean>(false)
     const menuList = [
-        { name: "Edit", action: () => onEdit?.() },
+        { name: "Edit", action: () => onEdit?.(question) },
         { name: "Delete", action: () => {} }
     ]
     return (
@@ -23,7 +24,7 @@ const QuestionDisplay = ({ onEdit }: IQuestionDisplayProps) =>
             }>
                 <ListItemText 
                     primary="Question 1" 
-                    secondary="What would you do if you have something to do but don't know what it is and you wonder what it could be" 
+                    secondary={ question?.text } 
                 />
             </ListItem>
             <Collapse in={ open } unmountOnExit>
@@ -31,18 +32,16 @@ const QuestionDisplay = ({ onEdit }: IQuestionDisplayProps) =>
                     <ListItemText
                         primary={
                             <List dense disablePadding>
-                                <ListItem >
-                                    <ListItemText primary="First option" secondary="Correct"/>
-                                </ListItem>                                
-                                <ListItem >
-                                    <ListItemText primary="Second option" secondary="Wrong"/>
-                                </ListItem>                                    
-                                <ListItem >
-                                    <ListItemText primary="Third option" secondary="Wrong"/>
-                                </ListItem>                                    
-                                <ListItem >
-                                    <ListItemText primary="Fourth option" secondary="Wrong"/>
-                                </ListItem>                                    
+                                {
+                                    question?.options?.map(option =>
+                                        <ListItem key={ option.id }>
+                                            <ListItemText 
+                                                primary={ option.text } 
+                                                secondary={ option.is_correct ? "Correct" : "Wrong" }
+                                            />
+                                        </ListItem>                                
+                                    )
+                                }
                             </List>
                         }
                     />

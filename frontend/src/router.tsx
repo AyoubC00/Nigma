@@ -85,7 +85,7 @@ const router = createBrowserRouter([
                         element: <CreateQuiz />
                     },
                     {
-                        path: "quizzes/:id/edit",
+                        path: "quizzes/:quiz_id/edit",
                         element: <EditQuiz />
                     }
                 ]
