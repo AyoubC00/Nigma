@@ -2,8 +2,8 @@ import { Person } from "@mui/icons-material"
 import { Box, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 
 interface ILeaderboardItem {
-    name: string
-    score: number
+    name?: string
+    score?: number
 }
 
 const LeaderboardItem = ({ name, score }: ILeaderboardItem) =>

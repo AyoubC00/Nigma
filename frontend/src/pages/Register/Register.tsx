@@ -16,6 +16,7 @@ const Register = () =>
     })
     const [errors, setErrors] = useState<IRegister>({})
     const { register } = useAuth()
+    const [processing, setProcessing] = useState<boolean>(false)
     const navigate = useNavigate()
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
@@ -24,7 +25,9 @@ const Register = () =>
     const handleSubmit = async () =>
     {
         setErrors({})
+        setProcessing(true)
         const response = await register(details)
+        setProcessing(false)
         if (response?.status === "failure")
         {
             return setErrors(response.messages)
@@ -109,7 +112,7 @@ const Register = () =>
                             sx={{ mb: 3 }} 
                         />
                     </Box>
-                    <Button fullWidth variant="contained" onClick={ handleSubmit }>Register</Button>
+                    <Button fullWidth disabled={ processing } variant="contained" onClick={ handleSubmit }>Register</Button>
                 </Box>
             </Container>
         </Box>

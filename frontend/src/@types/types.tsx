@@ -148,6 +148,7 @@ interface IQuizzesContext {
     checkAnswer: (question_id?: number | string, option_id?: number | string) => Promise<ApiResponse<Answer>> | null
     resetScore: (quiz_id?: number | string) => Promise<ApiResponse<Attempt>> | null
     getUserQuizzes: () => Promise<ApiResponse<IQuiz[]>> | null
+    getAttempts: () => Promise<ApiResponse<IAttempt[]>> | null
 }
 
 // type UpdateState<T> = (prev: T[]) => T[] | Partial<T>

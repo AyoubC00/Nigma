@@ -8,10 +8,12 @@ import { useEffect, useState } from "react"
 const UserQuizzes = () =>
 {
     const [userQuizzes, setUserQuizzes] = useState<IQuiz[]>([])
+    const [loading, setLoading] = useState(true)
     const { getUserQuizzes } = useQuizzes()
     useEffect( () => {
         (async () => {
             const response = await getUserQuizzes()
+            setLoading(false)
             if (response?.status === "success") setUserQuizzes(response.data)
         })()
     }, [])
@@ -33,7 +35,7 @@ const UserQuizzes = () =>
                 </Button>
                 <Grid container spacing={ 3 }>
                     {
-                        userQuizzes.length <= 0
+                        loading
                         ? [1, 2, 3, 4].map(quiz =>
                             <Grid xs={ 12 } sm={ 6 } lg={ 4 } item key={ quiz }>
                                 <Skeleton variant="rounded" animation="wave" height={ 200 } />

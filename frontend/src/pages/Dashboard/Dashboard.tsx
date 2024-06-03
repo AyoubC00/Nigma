@@ -1,12 +1,26 @@
 import { Box, Container, Divider, Grid, List, ListItem, ListItemText, Paper, Skeleton, Typography } from "@mui/material"
 import Attempt from "../../components/Attempt/Attempt"
-import { useQuizzes } from "../../contexts/QuizzesContext"
 import { InfoRounded } from "@mui/icons-material"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { useQuizzes } from "../../contexts/QuizzesContext"
 
 const Dashboard = () =>
 {
-    const { attempts, userQuizzes } = useQuizzes()
+    const [attempts, setAttempts] = useState<IAttempt[]>()
+    const [userQuizzes, setUserQuizzes] = useState<IQuiz[]>()
+    const [loading, setLoading] = useState(true)
+    const { getAttempts, getUserQuizzes } = useQuizzes()
+    useEffect(() => {
+        (
+            async () => {
+                const response = await getAttempts()
+                if (response?.status === "success") setAttempts(response.data)
+                const response_ = await getUserQuizzes()
+                if (response_?.status === "success") setUserQuizzes(response_.data)
+                setLoading(false)
+            }
+        )()
+    }, [])
     const Placeholder = () =>
     {
         return (
@@ -36,14 +50,14 @@ const Dashboard = () =>
                         <Grid item xs={ 12 } sm={ 4 }>
                             <Paper sx={{ p: 1 }}>
                                 <ListItem>
-                                    <ListItemText primary="Attempts" secondary={ attempts === null ? <Skeleton variant="text" animation="wave" /> : attempts.length }/>
+                                    <ListItemText primary="Attempts" secondary={ loading ? <Skeleton variant="text" animation="wave" /> : attempts?.length }/>
                                 </ListItem>
                             </Paper>
                         </Grid>
                         <Grid item xs={ 12 } sm={ 4 }>
                             <Paper sx={{ p: 1 }}>
                                 <ListItem>
-                                    <ListItemText primary="Quizzes" secondary={ userQuizzes === null ? <Skeleton variant="text" animation="wave" /> : userQuizzes.length }/>
+                                    <ListItemText primary="Quizzes" secondary={ loading ? <Skeleton variant="text" animation="wave" /> : userQuizzes?.length }/>
                                 </ListItem>
                             </Paper>
                         </Grid>
@@ -61,11 +75,12 @@ const Dashboard = () =>
                     <Paper sx={{ px: 2, mt: 1 }}>
                         <List>
                             {
-                                attempts === null ? <Placeholder /> : attempts.length === 0
+                                loading ? <Placeholder /> :
+                                attempts?.length === 0
                                 ? <Typography variant="subtitle1" color="gray" sx={{ p: 4, textAlign: "center" }}>
                                     <InfoRounded sx={{ verticalAlign: "top" }}/> You haven't taken any quiz yet.
                                 </Typography> 
-                                : attempts.map((attempt, index) => 
+                                : attempts?.map((attempt, index) => 
                                     <React.Fragment key={ attempt.id } >
                                         <Attempt 
                                             id={ attempt.id }
