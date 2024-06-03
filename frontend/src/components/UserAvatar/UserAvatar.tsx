@@ -1,5 +1,5 @@
 import { DashboardOutlined, HomeOutlined, LogoutOutlined, PersonOutline, QuizOutlined } from "@mui/icons-material"
-import { Avatar, Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
+import { Avatar, Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material"
 import { blue } from "@mui/material/colors"
 import React, { useState } from "react"
 import { NavLink } from "react-router-dom"
@@ -8,7 +8,7 @@ import { useAuth } from "../../contexts/AuthContext"
 const UserAvatar = () =>
 {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-    const { logout } = useAuth()
+    const { logout, user } = useAuth()
     const open = Boolean(anchorEl)
     const handleAnchor = (event: React.MouseEvent<HTMLElement>) =>
     {
@@ -33,7 +33,7 @@ const UserAvatar = () =>
     return (
         <Box>
             <IconButton size="small" onClick={ handleAnchor }>
-                <Avatar sx={{ bgcolor: blue[500] }}>AC</Avatar>
+                <Avatar sx={{ bgcolor: blue[500] }}><Typography variant="body1">{ `${ user?.first_name[0] }${ user?.last_name[0] }` }</Typography></Avatar>
             </IconButton>
             <Menu anchorEl={ anchorEl } open={ open } onClose={ handleClose }>
                 {

@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography } from "@mui/material"
+import { Box, Container, Grid, Skeleton, Typography } from "@mui/material"
 import QuizCard from "../../components/QuizCard/QuizCard"
 import { useQuizzes } from "../../contexts/QuizzesContext"
 const Popular = () =>
@@ -13,13 +13,20 @@ const Popular = () =>
                     </Typography>
                     <Grid container spacing={ 2 }>
                         {   
-                            quizzes?.map(quiz =>
+                            quizzes.length <= 0  
+                            ? [1, 2, 3, 4]?.map(quiz =>
+                                <Grid item xs={ 12 } sm={ 6 } md={ 4 } lg={ 3 } key={ quiz }>
+                                    <Skeleton variant="rounded" animation="wave" height={ 200 } />
+                                </Grid>
+                            )
+                            : quizzes?.map(quiz =>
                                 <Grid item xs={ 12 } sm={ 6 } md={ 4 } lg={ 3 } key={ quiz.id }>
                                     <QuizCard 
                                         id={ quiz.id } 
                                         title={ quiz.title } 
                                         image={ quiz.image }
                                         taken={ quiz?.taken } 
+                                        owner={ quiz.owner }
                                         category={ quiz.category }
                                     />
                                 </Grid>

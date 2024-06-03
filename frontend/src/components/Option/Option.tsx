@@ -1,7 +1,7 @@
 import { CheckRounded, Close, Help } from "@mui/icons-material"
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { blue, green, orange, red } from "@mui/material/colors"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type Option = {
     id: number | string
@@ -27,6 +27,10 @@ const COLORS: IColor = {
 const Option = ({ id, value, handleAnswer, bgcolor="blue", is_correct=null }: Option) =>
 {
     const [selected, setSelected] = useState(false)
+
+    useEffect( () => {
+        setSelected(false)
+    }, [id])
     
     const containerStyle = {
         bgcolor: COLORS[bgcolor].primary, 
@@ -42,9 +46,9 @@ const Option = ({ id, value, handleAnswer, bgcolor="blue", is_correct=null }: Op
         setSelected(true)
         handleAnswer?.(id)
     }
-
+    
     return (
-        <ListItemButton sx={ containerStyle } disabled={ disabled } onClick={ handleClick }>
+        <ListItemButton sx={ containerStyle } disabled={ disabled && !selected } onClick={ handleClick }>
             <ListItemIcon sx={{ color: "white", minWidth: 35 }}>
                 { is_correct === null ? <Help /> : is_correct ? <CheckRounded /> : <Close /> }
             </ListItemIcon>

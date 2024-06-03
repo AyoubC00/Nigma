@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, List, TextField } from "@mui/material"
+import { Alert, Box, Button, Container, Grid, List, Skeleton, Snackbar, TextField } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 import ImageUpload from "../../components/ImageUpdaload/ImageUpload"
 import InputTime from "../../components/InputTime/InputTime"
@@ -15,9 +15,11 @@ const EditQuiz = () =>
     const [questions, setQuestions] = useState<IQuestion[]>([])
     const [image, setImage] = useState<Blob | string>('')
     const [errors, setErrors] = useState<Partial<IQuiz>>({})
+    const [processing, setProcessing] = useState(false)
+    const [success, setSuccess] = useState<string>('')
     const [question, setQuestion] = useState<IQuestion|null>(null)
     const { quiz_id='' } = useParams()
-    const { getQuiz, update, destroy } = useQuizzes()
+    const { get, update, destroy } = useQuizzes()
 
     const handleQuestions = (question: IQuestion) => {
         setQuestions(prev => {
@@ -41,10 +43,13 @@ const EditQuiz = () =>
                 quiz.append(`questions[${index}][options][${j}][is_correct]`, `${Number(option["is_correct"])}`)
             })
         })
+        setProcessing(true)
         const response = await update(quiz, quiz_id)
+        setProcessing(false)
         if (response?.status === "failure") setErrors(response.messages)
+        else setSuccess("This quiz was updated successfully.")
     }
-
+    console.log(errors)
     const handleDelete = async () => 
     {
         const response = await destroy(quiz_id)
@@ -52,12 +57,18 @@ const EditQuiz = () =>
     }
 
     useEffect( () => {
-        if (quiz_id) {
-            const quiz = getQuiz(quiz_id)
-            setTitle(quiz?.title || '')
-            setQuiz(quiz)
-            setQuestions(quiz?.questions || [])
-        }
+        ( async () => {
+            if (quiz_id) {
+                const response = await get(quiz_id)
+                if (response?.status === "success")
+                {
+                    const { data: quiz } = response
+                    setTitle(quiz?.title || '')
+                    setQuiz(quiz)
+                    setQuestions(quiz?.questions || [])
+                }
+            }
+        })()
     }, [quiz_id])
 
     const handleImage = (image: File) =>
@@ -86,8 +97,12 @@ const EditQuiz = () =>
                             <TextField fullWidth size="small" name="title" label="Title" value={ title } onChange={ handleChange } sx={{ mb: 2 }} />
                             <List disablePadding>
                                 {
-                                    questions.map(question => 
-                                        <QuestionDisplay 
+                                    questions.length <= 0
+                                    ? [1].map(question =>
+                                        <Skeleton key={ question } sx={{ mb: 2 }} variant="rounded" animation="wave" height={ 118 } />
+                                    )
+                                    : questions.map(question => 
+                                        <QuestionDisplay
                                             key={ question.id } 
                                             question={ question }
                                             onEdit={ handleEdit }
@@ -104,8 +119,11 @@ const EditQuiz = () =>
                                 <Grid item xs={ 12 }>
                                     <InputTime />
                                 </Grid>
+                                {/* <Grid item xs={ 12 }>
+                                    <Button fullWidth size="medium" variant="outlined" onClick={ () => setOpen(true) } >Add question</Button>    
+                                </Grid> */}
                                 <Grid item xs={ 12 }>
-                                    <Button fullWidth variant="contained" onClick={ handleSave }>Save</Button>
+                                    <Button fullWidth variant="contained" disabled={ processing }  onClick={ handleSave }>Save</Button>
                                 </Grid>
                                 <Grid item xs={ 12 }>
                                     <Button fullWidth variant="contained" color="error" onClick={ handleDelete }>Delete</Button>
@@ -115,6 +133,15 @@ const EditQuiz = () =>
                     </Grid>
                 </Box>
             </Box>
+            <Snackbar
+                open={ Boolean(success) }
+                autoHideDuration={ 2000 }
+                onClose={ () => setSuccess('') }
+            >
+                <Alert>
+                    { success }
+                </Alert>
+            </Snackbar>
         </Container>
     )
 }

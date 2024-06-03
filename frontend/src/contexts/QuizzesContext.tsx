@@ -19,6 +19,7 @@ const QuizzesContext = createContext<IQuizzesContext>({
     saveAttempt: () => null,
     checkAnswer: () => null,
     resetScore: () => null,
+    getUserQuizzes: () => null
 })
 
 export const QuizzesContextProvider: React.FC<{children: React.ReactNode}> = ({ children }) =>
@@ -211,7 +212,8 @@ export const QuizzesContextProvider: React.FC<{children: React.ReactNode}> = ({ 
             checkAnswer, 
             saveAttempt, 
             resetScore, 
-            attempts 
+            attempts,
+            getUserQuizzes
         }}>
             { children }
         </QuizzesContext.Provider>

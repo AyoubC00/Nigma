@@ -1,5 +1,5 @@
 import { CloudUpload } from "@mui/icons-material"
-import { Box, Button, FormHelperText, SxProps, Typography } from "@mui/material"
+import { Box, Button, FormHelperText, Skeleton, SxProps } from "@mui/material"
 import { ChangeEvent, CSSProperties, useState } from "react"
 
 interface IImageUpload {
@@ -37,12 +37,12 @@ const ImageUpload = ({ sx, placeholder, error, helperText, setImage }: IImageUpl
     }
     return (
         <Box sx={ sx }>
-            { preview || placeholder ? <img src={ preview || placeholder } alt="Quiz image" style={ imageStyle } /> : null }
+            { preview || placeholder ? <img src={ preview || placeholder } alt="Quiz image" style={ imageStyle } /> : <Skeleton variant="rounded" sx={{ mb: 1 }} animation="wave" height={ 200 } /> }
             <Button fullWidth variant="contained" size="medium" startIcon={ <CloudUpload /> } component="label" sx={{ whiteSpace: "pre" }}>
                 Upload image
                 <input type="file" id="imageUpload" style={ inputStyle } onChange={ handleChange }/>
             </Button>
-            <FormHelperText error={ error }>{ helperText }</FormHelperText>
+            <FormHelperText sx={{ mx: "14px", mt: "4px" }} error={ error }>{ helperText }</FormHelperText>
         </Box>
     )
 }

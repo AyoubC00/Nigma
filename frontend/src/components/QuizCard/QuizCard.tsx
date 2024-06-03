@@ -2,10 +2,12 @@ import { Edit } from "@mui/icons-material"
 import { Avatar, Box, Button, Card, CardContent, CardMedia, Chip, SxProps, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { useQuizzes } from "../../contexts/QuizzesContext"
+import { useAuth } from "../../contexts/AuthContext"
 
-const QuizCard = ({ id, title, image, taken, category="sth" }: QuizCard) =>
+const QuizCard = ({ id, owner, title, image, taken, category="Category" }: QuizCard) =>
 {
     const { setState, saveAttempt, resetScore } = useQuizzes()
+    const { user } = useAuth()
     const navigate = useNavigate()
     const cardStyle: SxProps = [
         {
@@ -66,24 +68,29 @@ const QuizCard = ({ id, title, image, taken, category="sth" }: QuizCard) =>
                 variant="filled" 
                 color="primary" 
                 size="small"
-                sx={{ position: "absolute", top: 0, right: 0, m: 1, zIndex: 1, letterSpacing: .8 }} />
-            <Chip 
-                label="Edit"
-                variant="filled" 
-                color="secondary" 
-                size="small"
-                icon={
-                    <Edit />
-                }
-                onClick={ handleEdit }
-                sx={{ position: "absolute", top: 28, right: 0, m: 1, zIndex: 1, letterSpacing: .8 }} />
+                sx={{ position: "absolute", top: 0, right: 0, m: 1, zIndex: 1, letterSpacing: .8 }} 
+            />
+            {
+                owner.id == user?.id &&
+                <Chip 
+                    label="Edit"
+                    variant="filled" 
+                    color="secondary" 
+                    size="small"
+                    icon={
+                        <Edit />
+                    }
+                    onClick={ handleEdit }
+                    sx={{ position: "absolute", top: 28, right: 0, m: 1, zIndex: 1, letterSpacing: .8 }} 
+                />
+            }
             <CardContent sx={ cardContentStyle }>
                 <Chip 
                     size="small" 
                     variant="filled"
                     color="primary"
-                    avatar={ <Avatar>AC</Avatar> }
-                    label="AyoubC00"
+                    avatar={ <Avatar>{ `${ owner?.first_name[0] }${ owner?.last_name[0] }` }</Avatar> }
+                    label={ owner?.username }
                     sx={{ width: "fit-content", color: "white"}}
                 />
                 <Box sx={{
