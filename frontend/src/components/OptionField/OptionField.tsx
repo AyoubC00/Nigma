@@ -1,8 +1,8 @@
 import { CheckCircle } from "@mui/icons-material"
-import { FormControl, IconButton, InputLabel, OutlinedInput, OutlinedInputProps, SxProps } from "@mui/material"
+import { FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, OutlinedInputProps, SxProps } from "@mui/material"
 import { green } from "@mui/material/colors"
 
-const OptionField = ({ sx, checked, name, onCheck , label, ...props } : IOptionField & SxProps & OutlinedInputProps) =>
+const OptionField = ({ sx, checked, name, onCheck , label, helperText, value, ...props } : IOptionField & SxProps & OutlinedInputProps) =>
 {
     const handleChange = () =>
     {
@@ -14,10 +14,11 @@ const OptionField = ({ sx, checked, name, onCheck , label, ...props } : IOptionF
             size="small" 
             sx={ sx }
         >
-            <InputLabel>{ label }</InputLabel>
+            <InputLabel error={ props.error }>{ label }</InputLabel>
             <OutlinedInput 
                 label={ label }
                 name={ name }
+                value={ value || '' }
                 { ...props }
                 endAdornment={
                     <IconButton 
@@ -32,6 +33,7 @@ const OptionField = ({ sx, checked, name, onCheck , label, ...props } : IOptionF
                     </IconButton>
                 }
             />
+            <FormHelperText error={ props.error }>{ helperText }</FormHelperText>
         </FormControl>
     )
 }

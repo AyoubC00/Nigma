@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import API from "../api";
 import { useAuth } from "./AuthContext";
 
-
 const QuizzesContext = createContext<IQuizzesContext>({ 
     quizzes: [],
     userQuizzes: null,
@@ -13,8 +12,10 @@ const QuizzesContext = createContext<IQuizzesContext>({
     getQuiz: () => null,
     setState: () => {},
     setQuiz: () => null,
-    save: () => null,
     get: () => null,
+    save: () => null,
+    update: () => null,
+    destroy: () => null,
     saveAttempt: () => null,
     checkAnswer: () => null,
     resetScore: () => null,
@@ -65,6 +66,34 @@ export const QuizzesContextProvider: React.FC<{children: React.ReactNode}> = ({ 
                     headers: { "Content-Type": "multipart/form-data" } 
                 }
             )
+            return response.data
+        }
+        catch (error)
+        {
+            return error
+        }
+    }
+    const update = async (quiz: FormData, quiz_id:number | string) => {
+        try
+        {
+            const response = await API.post(
+                `quiz/${ quiz_id }`, 
+                quiz, 
+                { 
+                    headers: { "Content-Type": "multipart/form-data" } 
+                }
+            )
+            return response.data
+        }
+        catch (error)
+        {
+            return error
+        }
+    }
+    const destroy = async (quiz_id:number | string) => {
+        try
+        {
+            const response = await API.delete(`quiz/${ quiz_id }`)
             return response.data
         }
         catch (error)
@@ -166,7 +195,24 @@ export const QuizzesContextProvider: React.FC<{children: React.ReactNode}> = ({ 
     }
     
     return(
-        <QuizzesContext.Provider value={{ state, setState, quizzes, userQuizzes, getQuiz, getQuestions, setQuiz, quiz, save, get, checkAnswer, saveAttempt, resetScore, attempts } }>
+        <QuizzesContext.Provider value={{ 
+            state, 
+            setState, 
+            quizzes, 
+            userQuizzes, 
+            getQuiz, 
+            getQuestions, 
+            setQuiz, 
+            quiz, 
+            get, 
+            save, 
+            update, 
+            destroy, 
+            checkAnswer, 
+            saveAttempt, 
+            resetScore, 
+            attempts 
+        }}>
             { children }
         </QuizzesContext.Provider>
     )

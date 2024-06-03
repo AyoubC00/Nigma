@@ -14,13 +14,13 @@ class StoreQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => "required|unique:quizzes,title",
+            "title" => "required",
             "questions" => "required|array",
             "questions.*.text" => "required",
             "questions.*.options" => "required|array",
             "questions.*.options.*.text" => "required",
             "questions.*.options.*.is_correct" => "required",
-            "image" => "required|image|mimes:jpg"
+            "image" => "required|image|mimes:jpg,jpeg,png"
         ];
     }
 }

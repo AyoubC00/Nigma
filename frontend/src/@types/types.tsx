@@ -3,6 +3,10 @@ interface IUser {
     name: string
 }
 
+type Errors = {
+    [name: string]: string
+}
+
 type Time = { 
     seconds: number
     minutes: number 
@@ -131,8 +135,10 @@ interface IQuizzesContext {
     getQuiz: (quiz_id: number | string) => IQuiz | null
     setState: (state: State) => void
     setQuiz: (quiz:IQuiz) => void | null
-    save: (quiz: FormData) => Promise<ApiResponse<IQuiz>> | null
     get: (quiz_id: string | number) => Promise<ApiResponse<IQuiz>> | null
+    save: (quiz: FormData) => Promise<ApiResponse<IQuiz>> | null
+    update: (quiz: FormData, quiz_id: number | string) => Promise<ApiResponse<IQuiz>> | null
+    destroy: (quiz_id: string | number) => Promise<ApiResponse<IQuiz>> | null
     saveAttempt: (quiz_id: number | string) => Promise<ApiResponse<Attempt>> | null
     checkAnswer: (question_id?: number | string, option_id?: number | string) => Promise<ApiResponse<Answer>> | null
     resetScore: (quiz_id?: number | string) => Promise<ApiResponse<Attempt>> | null
@@ -140,10 +146,9 @@ interface IQuizzesContext {
 
 // type UpdateState<T> = (prev: T[]) => T[] | Partial<T>
 
-
-
 interface Options {
     [name: string]: {
+        id: number | string
         text: string
         is_correct: boolean
     }
@@ -151,6 +156,7 @@ interface Options {
 
 interface IOptionField {
     checked?: boolean
+    helperText?: string
     onCheck?: (target?: string) => void
 }
 

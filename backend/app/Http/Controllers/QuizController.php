@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreQuizRequest;
+use App\Http\Requests\UpdateQuestionRequest;
+use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizCollection;
 use App\Http\Resources\QuizResource;
 use App\Models\Attempt;
+use App\Models\Option;
+use App\Models\Question;
 use App\Models\Quiz;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -89,7 +93,7 @@ class QuizController extends Controller
             $quiz = $user->quizzes()->create(["title" => $title, "image" => $image_url, "mode" => "Solo"]);
             forEach($questions as $question) {
                 $question_instance = $quiz->questions()->create(["text" => $question["text"]]);
-                $options = $question_instance->options()->createMany($question["options"]);
+                $question_instance->options()->createMany($question["options"]);
             }
         DB::commit();
         return response([
@@ -112,9 +116,34 @@ class QuizController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Quiz $quiz)
+    public function update(UpdateQuizRequest $request, Quiz $quiz)
     {
-        //
+        $title = $request->validated(["title"]);
+        $image = $request->validated("image");
+        $questions = $request->validated(["questions"]);
+        if ($request->hasFile('image')) {
+            $image_url = Storage::disk("public")->putFile("images", $image, "public");
+            $image_url = Storage::disk("public")->url($image_url);
+            $quiz->update(["image" => $image_url]); 
+            return $quiz;
+        }
+        if ($title) {
+            $quiz->update(["title" => $title, "mode" => "Solo"]);
+        }
+        if ($questions) {
+            forEach($questions as $question) {
+                $question_instance = Question::find($question['id']);
+                $question_instance->update(["text" => $question["text"]]);
+                forEach($question['options'] as $option) {
+                    $opt = Option::find($option['id']);
+                    $opt->update(['text' => $option['text'], 'is_correct' => $option['is_correct']]);
+                }
+            }
+        }
+        return response([
+            "status" => "success",
+            "message" => "The quiz was updated successfully.",
+        ]);
     }
 
     /**
@@ -122,6 +151,6 @@ class QuizController extends Controller
      */
     public function destroy(Quiz $quiz)
     {
-        //
+        $quiz->delete();
     }
 }

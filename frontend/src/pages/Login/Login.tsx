@@ -9,6 +9,7 @@ const Login = () =>
     const [details, setDetails] = useState({ username: '', password: '', remember_me: false })
     const { login } = useAuth()
     const [errors, setErrors] = useState<ILogin>({})
+    const [loading, setLoading] = useState(false)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
         if (event.target.name === "remember_me")
@@ -21,7 +22,9 @@ const Login = () =>
     const handleSubmit = async () =>
     {
         setErrors({})
+        setLoading(true)
         const response = await login(details)
+        setLoading(false)
         if (response?.status === "failure")
         {
             return setErrors(response.messages)
@@ -71,7 +74,7 @@ const Login = () =>
                             value={ details.remember_me }
                             sx={{ mb: 2 }}
                         />
-                        <Button fullWidth variant="contained" color="primary" onClick={ handleSubmit }>Login</Button>
+                        <Button fullWidth disabled={ loading } variant="contained" color="primary" onClick={ handleSubmit }>Login</Button>
                     </Box>
                 </Box>
             </Container>
