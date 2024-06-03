@@ -21,6 +21,7 @@ class QuizResource extends JsonResource
             // "category" => $this->category,
             "image" => $this->image,
             "taken" => (boolean) Auth::user()?->attempts->where("quiz_id", $this->id)->first(),
+            "owner" => new UserResource($this->user),
             "questions" => new QuestionCollection($this->questions),
         ];
     }
