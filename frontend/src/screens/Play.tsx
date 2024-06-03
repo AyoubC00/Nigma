@@ -23,6 +23,7 @@ const Play = ({ questions, onGameOver }: IPlay) =>
     const [countDown, setCountDown] = useState(false)
     const [time, setTime] = useState<Time|null>(null)
     const [pause, setPause] = useState<boolean|null>(null)
+    const [processing, setProcessing] = useState<boolean>(true)
     const [answers, setAnswers] = useState<IAnswer>()
     const { checkAnswer } = useQuizzes()
     
@@ -31,7 +32,9 @@ const Play = ({ questions, onGameOver }: IPlay) =>
         if (pause) return
         setCountDown(false)
         setPause(true)
+        setProcessing(true)
         const response = await checkAnswer(question?.id, option_id)
+        setProcessing(false)
         if (response?.status === "success")
         {
             setAnswers(response.data)
@@ -49,6 +52,7 @@ const Play = ({ questions, onGameOver }: IPlay) =>
 
     const handleTimeout = () =>
     {
+        handleAnswer('')
         setPause(true)
     }
 
@@ -60,7 +64,7 @@ const Play = ({ questions, onGameOver }: IPlay) =>
         <>
             <Counter sx={{ mx: "auto", translate: "0 -50%" }} time={ time } start={ countDown } onTimeout={ handleTimeout }/>
             <Typography sx={{ mt: 4, mx: "auto" }}>{ question?.text }</Typography>
-            { pause ? <Button variant="contained" color="error" sx={{ mt: "auto", mx: "auto" }} onClick={ () => setPause(false) }>Continue<ChevronRight /></Button> : null }
+            { pause && !processing ? <Button variant="contained" color="error" sx={{ mt: "auto", mx: "auto" }} onClick={ () => setPause(false) }>Continue<ChevronRight /></Button> : null }
             <Grid container spacing={2} sx={{ mt: "auto" }}>
                 {
                     question?.options.map((option, index) => 

@@ -2,9 +2,11 @@ import { GitHub, LinkedIn } from "@mui/icons-material"
 import { Box, Button, Container, IconButton, Typography } from "@mui/material"
 import { blue } from "@mui/material/colors"
 import { NavLink } from "react-router-dom"
+import { useAuth } from "../../contexts/AuthContext"
 
 const Footer = () =>
 {
+    const { token } = useAuth()
     const navLinks = [
         { name: "home", to: "/" },
         { name: "contact", to: "/contact" },
@@ -39,13 +41,26 @@ const Footer = () =>
                         <Box sx={{ order: { xs: 1, sm: 2 }, mb: { xs: 2, sm: 0 } }}>
                             {
                                 navLinks.map((link, index) =>
-                                    <Button 
-                                        key={ index }
-                                        variant="text" 
-                                        color="inherit" 
-                                        component={ NavLink } 
-                                        to={ link.to }
-                                    >{ link.name }</Button>
+                                    (link.name === "login" || link.name === "register") 
+                                    ? token ? null : (
+                                        <Button 
+                                            key={ index }
+                                            variant="text" 
+                                            color="inherit" 
+                                            component={ NavLink } 
+                                            to={ link.to }
+                                        >{ link.name }</Button>
+                                    )
+                                    : 
+                                    (
+                                        <Button 
+                                            key={ index }
+                                            variant="text" 
+                                            color="inherit" 
+                                            component={ NavLink } 
+                                            to={ link.to }
+                                        >{ link.name }</Button>
+                                    )
                                 )
                             }
                         </Box>

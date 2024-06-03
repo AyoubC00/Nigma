@@ -1,6 +1,9 @@
 interface IUser {
     id: number | string
-    name: string
+    username: string
+    first_name: string
+    last_name: string
+    email: string
 }
 
 type Errors = {
@@ -72,11 +75,13 @@ interface IQuiz {
     title: string
     taken: boolean
     image: string
+    owner: IUser
     category: string
     questions: IQuestion[]
 }
 interface QuizCard {
     id: number | string
+    owner: IUser
     title: string
     taken?: boolean
     image: string
@@ -142,6 +147,7 @@ interface IQuizzesContext {
     saveAttempt: (quiz_id: number | string) => Promise<ApiResponse<Attempt>> | null
     checkAnswer: (question_id?: number | string, option_id?: number | string) => Promise<ApiResponse<Answer>> | null
     resetScore: (quiz_id?: number | string) => Promise<ApiResponse<Attempt>> | null
+    getUserQuizzes: () => Promise<ApiResponse<IQuiz[]>> | null
 }
 
 // type UpdateState<T> = (prev: T[]) => T[] | Partial<T>

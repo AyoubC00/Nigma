@@ -28,6 +28,7 @@ const CreateQuiz = () =>
     const [_question, setQuestion] = useState<IQuestion|null>(null)
     const [image, setImage] = useState<Blob | string>('')
     const [errors, setErrors] = useState<Partial<IQuiz>>({})
+    const [processing, setProcessing] = useState(false)
     const [id, setId] = useState(0)
     const { save } = useQuizzes()
 
@@ -50,7 +51,6 @@ const CreateQuiz = () =>
             : [...prev, { id, ...question }])
         if (question?.id === undefined) setId(prev => prev + 1)
     }
-    console.log(id)
     const handleSave = async () =>
     {
         const quiz = new FormData()
@@ -63,7 +63,9 @@ const CreateQuiz = () =>
                 quiz.append(`questions[${index}][options][${j}][is_correct]`, `${Number(option["is_correct"])}`)
             })
         })
+        setProcessing(true)
         const response = await save(quiz)
+        setProcessing(false)
         if (response?.status === "failure") setErrors(response.messages)
         else 
         {
@@ -81,24 +83,11 @@ const CreateQuiz = () =>
             <CreateQuestion open={ open } question={ _question } onClose={ () => setOpen(false) } onClick={ () => setOpen(false) } setQuestions={ handleQuestions } />
             <Box sx={{ py: 4 }}>
                 <Box sx={{ display: { xs: "block", sm: "flex" }, gap: 4, mb: 4 }}>
-                    <Box sx={{ mb: { xs: 2, sm: 0 }, width: 1, display: "none" }}>
-                        {/* <TextField fullWidth size="small" label="Quiz title" value={ title } onChange={ handleTitle } sx={{ mb: 2 }} error={ errors.title ? true : false } helperText={ errors.title } /> */}
-                        {/* <Button fullWidth size="medium" variant="outlined" sx={{ mb: 2 }} onClick={ () => setOpen(true) } >Add question</Button>     */}
-                        {/* { errors.questions ? <Alert severity="error">{ errors["questions"] }</Alert> : null } */}
-                        {
-                            questions.map((question, index) =>
-                                <QuestionElement 
-                                    key={ index }
-                                    text={ question.text }
-                                    options={ question.options }
-                                />
-                            )
-                        }
-                    </Box>
                     <Grid container spacing={ 4 }>
                         <Grid item xs={ 8 }>
-                            <TextField fullWidth size="small" name="title" label="Title" value={ title } onChange={ handleTitle } sx={{ mb: 2 }} />
+                            <TextField fullWidth size="small" name="title" label="Title" error={ errors.title ? true : false } helperText={ errors.title }  value={ title } onChange={ handleTitle } sx={{ mb: 2 }} />
                             <Button fullWidth size="medium" variant="outlined" sx={{ mb: 2 }} onClick={ () => setOpen(true) } >Add question</Button>    
+                            { questions.length <= 0 && errors.questions ? <Alert severity="error">{ `${ errors.questions }` }</Alert> : null }
                             <List disablePadding>
                                 {
                                     questions.map(question => 
@@ -120,8 +109,7 @@ const CreateQuiz = () =>
                                     <InputTime />
                                 </Grid>
                                 <Grid item xs={ 12 }>
-                                    {/* <Button fullWidth variant="contained" onClick={ handleSave }>Save</Button> */}
-                                    <Button fullWidth startIcon={ <SaveOutlined /> } variant="contained" size="medium" onClick={ handleSave} >Save</Button>               
+                                    <Button fullWidth startIcon={ <SaveOutlined /> } disabled={ processing } variant="contained" size="medium" onClick={ handleSave} >Save</Button>               
                                 </Grid>
                             </Grid>
                         </Grid>
